@@ -24,7 +24,7 @@ namespace MyNotes.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            if(User.Identity.IsAuthenticated)
+            if(User.Identity!.IsAuthenticated)
             {
                 return RedirectToAction(nameof(NoteController.Index), "Note");
             }
@@ -36,7 +36,7 @@ namespace MyNotes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 return RedirectToAction(nameof(NoteController.Index), "Note");
             }
@@ -73,10 +73,9 @@ namespace MyNotes.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 return RedirectToAction(nameof(NoteController.Index), "Note");
             }
@@ -88,7 +87,7 @@ namespace MyNotes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 return RedirectToAction(nameof(NoteController.Index), "Note");
             }
@@ -97,7 +96,7 @@ namespace MyNotes.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if(result.Succeeded)
                 {
-                    return RedirectToAction(nameof(NoteController.Index), "Index");
+                    return RedirectToAction(nameof(NoteController.Index), "Note");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid login attempt");
             }

@@ -24,22 +24,17 @@ namespace MyNotes.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user != null)
-            {
-                var userId = user.Id;
-                var notes = await _dbContext.Notes
-                    .Where(n => n.ApplicationUserId == userId)
-                    .Select(n => new NoteViewModel
-                    {
-                        Id = n.Id,
-                        Content = n.Content,
-                        Title = n.Title
-                    })
-                    .ToListAsync();
-                return View(notes);
-            }
-
-            return RedirectToAction(nameof(AuthController.Logout), "Auth");
+            var userId = user!.Id;
+            var notes = await _dbContext.Notes
+                .Where(n => n.ApplicationUserId == userId)
+                .Select(n => new NoteViewModel
+                {
+                    Id = n.Id,
+                    Content = n.Content,
+                    Title = n.Title
+                })
+                .ToListAsync();
+            return View(notes);
         }
 
         [HttpGet]
@@ -55,13 +50,7 @@ namespace MyNotes.Controllers
             if(ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
-
-                if (user == null)
-                {
-                    return RedirectToAction(nameof(AuthController.Logout), "Auth");
-                }
-
-                var userId = user.Id;
+                var userId = user!.Id;
                 Note note = new Note
                 {
                     Title = model.Title,
