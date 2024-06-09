@@ -228,6 +228,10 @@ namespace MyNotes.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
@@ -235,12 +239,9 @@ namespace MyNotes.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserInformationId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserInformationId");
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Notes");
                 });
@@ -258,11 +259,9 @@ namespace MyNotes.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -326,13 +325,13 @@ namespace MyNotes.Migrations
 
             modelBuilder.Entity("MyNotes.Models.Entities.Note", b =>
                 {
-                    b.HasOne("MyNotes.Models.Entities.UserInformation", "UserInformation")
+                    b.HasOne("MyNotes.Models.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany("Notes")
-                        .HasForeignKey("UserInformationId")
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("UserInformation");
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("MyNotes.Models.Entities.UserInformation", b =>
@@ -348,13 +347,10 @@ namespace MyNotes.Migrations
 
             modelBuilder.Entity("MyNotes.Models.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("Notes");
+
                     b.Navigation("UserInformation")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MyNotes.Models.Entities.UserInformation", b =>
-                {
-                    b.Navigation("Notes");
                 });
 #pragma warning restore 612, 618
         }

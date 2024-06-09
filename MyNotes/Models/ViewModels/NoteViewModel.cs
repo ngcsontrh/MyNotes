@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyNotes.Models.Entities
+namespace MyNotes.Models.ViewModels
 {
-    public class Note
+    public class NoteViewModel
     {
         public int Id { get; set; }
+
+        [Required]
         public string Title { get; set; } = null!;
         public string? Content { get; set; }
-        public string ApplicationUserId { get; set; } = null!;
-
-        public ApplicationUser ApplicationUser { get; set; } = null!;
     }
 }

@@ -1,0 +1,24 @@
+﻿@model IEnumerable<MyNotes.Models.ViewModels.NoteViewModel>
+
+<a
+    asp-action="Create" asp-controller="Note"
+    class="btn btn-primary mb-4"
+    role="button"
+    >Add New Note
+</a>
+
+<div class="row">
+    @foreach(var note in Model)
+    {
+        <div class="col-3 mb-4">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@note.Title</h5>
+                    <p class="card-text">@note.Content</p>
+                    <a asp-action="Edit" asp-controller="Note" asp-route-id="@note.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-controller="Note" asp-route-id="@note.Id" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

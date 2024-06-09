@@ -21,9 +21,16 @@ namespace MyNotes.Data
                 .HasForeignKey<UserInformation>(ui => ui.ApplicationUserId);
 
             builder.Entity<UserInformation>()
-                .HasMany(ui => ui.Notes)
-                .WithOne(n => n.UserInformation)
-                .HasForeignKey(n => n.UserInformationId);
+                .Property(au => au.ApplicationUserId).IsRequired();
+
+            builder.Entity<Note>()
+                .Property(au => au.ApplicationUserId).IsRequired();
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(au => au.Notes)
+                .WithOne(n => n.ApplicationUser)
+                .HasForeignKey(n => n.ApplicationUserId);
+
         }
     }
 }
