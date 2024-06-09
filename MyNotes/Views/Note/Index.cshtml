@@ -12,10 +12,10 @@
     {
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100">
-                <div class="card-body d-flex flex-column">
+                <div class="card-body d-flex flex-column" style="background-color: rgb(255 251 235);">
                     <h5 class="card-title">@note.Title</h5>
                     <p class="card-text">@note.Content</p>
-                    <div class="mt-auto">
+                    <div class="mt-auto ms-auto">
                         <a asp-action="Edit" asp-controller="Note" asp-route-id="@note.Id" class="btn btn-warning">Edit</a>
                         <a asp-action="Delete" asp-controller="Note" asp-route-id="@note.Id" class="btn btn-danger">Delete</a>
                     </div>
