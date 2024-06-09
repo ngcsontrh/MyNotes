@@ -10,6 +10,6 @@ My Notes là một ứng dụng web được xây dựng bằng ASP.NET Core 8.
 - CRUD (Create, Read, Update, Delete) ghi chú.
 
 ## Công nghệ sử dụng
-- ASP.NET Core 8
+- ASP.NET Core 8 MVC
 - Identity
 - Bootstrap
