@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MyNotes.Models.ViewModels.NoteViewModel>
+﻿@using MyNotes.Models.ViewModels
+@model IndexNoteViewModel<NoteViewModel>
 
 <a
     asp-action="Create" asp-controller="Note"
@@ -8,20 +9,45 @@
 </a>
 
 <div class="row justify-content-start">
-    @foreach (var note in Model)
+    @if(Model.Items != null)
     {
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body d-flex flex-column" style="background-color: rgb(255 251 235);">
-                    <h5 class="card-title">@note.Title</h5>
-                    <p class="card-text">@note.Content</p>
-                    <div class="mt-auto ms-auto">
-                        <a asp-action="Edit" asp-controller="Note" asp-route-id="@note.Id" class="btn btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-controller="Note" asp-route-id="@note.Id" class="btn btn-danger">Delete</a>
+        @foreach (var note in Model.Items)
+        {
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column" style="background-color: rgb(255 251 235);">
+                        <h5 class="card-title">@note.Title</h5>
+                        <p class="card-text">@note.Content</p>
+                        <div class="mt-auto ms-auto">
+                            <a asp-action="Edit" asp-controller="Note" asp-route-id="@note.Id" class="btn btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-controller="Note" asp-route-id="@note.Id" class="btn btn-danger">Delete</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>
 
+<nav>
+    <ul class="pagination">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageIndex - 1)">Previous</a>
+            </li>
+        }
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(@Model.PageIndex == i ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageIndex + 1)">Next</a>
+            </li>
+        }
+    </ul>
+</nav>

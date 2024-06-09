@@ -20,13 +20,22 @@ namespace MyNotes.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        [HttpGet("{page:int?}")]
+        public async Task<IActionResult> Index([FromRoute] int page = 1, int pageSize = 12)
         {
             var user = await _userManager.GetUserAsync(User);
-            var userId = user!.Id;
-            var notes = await _dbContext.Notes
+            string userId = user!.Id;
+            int countItemSkip = (page - 1) * pageSize;
+            int totalItems = await _dbContext.Notes
                 .Where(n => n.ApplicationUserId == userId)
+                .CountAsync();
+
+            var viewModel = new IndexNoteViewModel<NoteViewModel>();
+            viewModel.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            viewModel.Items = await _dbContext.Notes
+                .Where(n => n.ApplicationUserId == userId)
+                .Skip(countItemSkip)
+                .Take(pageSize)
                 .Select(n => new NoteViewModel
                 {
                     Id = n.Id,
@@ -34,7 +43,8 @@ namespace MyNotes.Controllers
                     Title = n.Title
                 })
                 .ToListAsync();
-            return View(notes);
+            viewModel.PageIndex = page;
+            return View(viewModel);
         }
 
         [HttpGet]
