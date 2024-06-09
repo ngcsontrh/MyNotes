@@ -1,0 +1,39 @@
+﻿@model MyNotes.Models.ViewModels.EditAccountViewModel
+
+<div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="EditAccount" asp-controller="Auth" method="post">
+    <input asp-for="Id" type="hidden" />
+
+    <div class="mb-3">
+        <label asp-for="Username" class="form-label">Username</label>
+        <input asp-for="Username" type="text" class="form-control" disabled />
+        <input asp-for="Username" type="hidden" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" type="email" class="form-control">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewPassword" class="form-label">New Password (Option)</label>
+        <input asp-for="NewPassword" type="password" class="form-control">
+        <span asp-validation-for="NewPassword" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">Password</label>
+        <input asp-for="Password" type="password" class="form-control">
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control">
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <button type="reset" class="btn btn-secondary">Reset</button>
+    <button type="submit" class="btn btn-warning">Edit</button>
+</form>

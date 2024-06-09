@@ -104,6 +104,63 @@ namespace MyNotes.Controllers
         }
 
         [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> EditAccount()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var editAccountViewModel = new EditAccountViewModel
+            {
+                Id = currentUser!.Id,
+                Username = currentUser.UserName!,
+                Email = currentUser.Email!
+            };
+            return View(editAccountViewModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAccount([FromForm] EditAccountViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (!await _userManager.CheckPasswordAsync(user!, model.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Current password is incorrect");
+                    return View(model);
+                }
+                if (model.NewPassword != null)
+                {
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(user!, model.Password , model.NewPassword);
+                    if (!changePasswordResult.Succeeded)
+                    {
+                        foreach (var error in changePasswordResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return View(model);
+                    }
+                }
+                user!.Email = model.Email;
+                var updateResult = await _userManager.UpdateAsync(user);
+                if(updateResult.Succeeded)
+                {
+                    return View(model);
+                }
+                else
+                {
+                    foreach (var error in updateResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(model);
+                }
+            }
+            return View(model);
+        }
+
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
