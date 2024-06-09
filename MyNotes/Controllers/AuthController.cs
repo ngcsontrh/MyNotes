@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MyNotes.Data;
 using MyNotes.Models.Entities;
 using MyNotes.Models.ViewModels;
@@ -44,11 +45,11 @@ namespace MyNotes.Controllers
             {
                 var user = new ApplicationUser()
                 {
-                    UserName = model.Username,
-                    Email = model.Email,
+                    UserName = model.Username.Trim(),
+                    Email = model.Email.Trim(),
                 };
 
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password.Trim());
                 if(result.Succeeded)
                 {
                     UserInformation userInformation = new UserInformation()
@@ -93,7 +94,7 @@ namespace MyNotes.Controllers
             }
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Username.Trim(), model.Password.Trim(), model.RememberMe, lockoutOnFailure: false);
                 if(result.Succeeded)
                 {
                     return RedirectToAction(nameof(NoteController.Index), "Note");
@@ -111,8 +112,8 @@ namespace MyNotes.Controllers
             var editAccountViewModel = new EditAccountViewModel
             {
                 Id = currentUser!.Id,
-                Username = currentUser.UserName!,
-                Email = currentUser.Email!
+                Username = currentUser.UserName!.Trim(),
+                Email = currentUser.Email!.Trim()
             };
             return View(editAccountViewModel);
         }
@@ -125,14 +126,14 @@ namespace MyNotes.Controllers
             if(ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
-                if (!await _userManager.CheckPasswordAsync(user!, model.Password))
+                if (!await _userManager.CheckPasswordAsync(user!, model.Password.Trim()))
                 {
                     ModelState.AddModelError(string.Empty, "Current password is incorrect");
                     return View(model);
                 }
-                if (model.NewPassword != null)
+                if (!model.NewPassword.IsNullOrEmpty())
                 {
-                    var changePasswordResult = await _userManager.ChangePasswordAsync(user!, model.Password , model.NewPassword);
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(user!, model.Password.Trim() , model.NewPassword!.Trim());
                     if (!changePasswordResult.Succeeded)
                     {
                         foreach (var error in changePasswordResult.Errors)
@@ -142,7 +143,7 @@ namespace MyNotes.Controllers
                         return View(model);
                     }
                 }
-                user!.Email = model.Email;
+                user!.Email = model.Email.Trim();
                 var updateResult = await _userManager.UpdateAsync(user);
                 if(updateResult.Succeeded)
                 {
