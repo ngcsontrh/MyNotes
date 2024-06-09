@@ -19,12 +19,14 @@
                                     <div class="form-floating mb-3">
                                         <input asp-for="Username" class="form-control" required>
                                         <label asp-for="Username" class="form-label">Username</label>
+                                        <span asp-validation-for="Username" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
                                         <input asp-for="Password" class="form-control" placeholder="Password" required>
                                         <label asp-for="Password" class="form-label">Password</label>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-12">
